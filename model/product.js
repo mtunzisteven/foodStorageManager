@@ -6,23 +6,23 @@ const productSchema = new Schema({
   // title: String gives a version of the title where we can add product without title
   // the versions below ensure that product entered always has the required fields
 
-  title: {
+  name: {
     type: String,
     required: true
   },
-  description: {
+  servings: {
+    type: String,
+    required: true
+  },
+  addedDate: {
     type: Number,
     required: true
   },
-  size: {
-    type: String,
+  expiryDate: {
+    type: Number,
     required: true
   },
-  expiry: {
-    type: String,
-    required: true
-  },
-  userId: {
+  creator: { // User who created this product referenced
     type: Schema.Types.ObjectId,  // call schema to describe id type of mongoDb
     ref: 'User', // referes to mongodb id in User model | relation : not used when docs embedded
     required: true
