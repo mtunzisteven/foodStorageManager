@@ -1,5 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
+const Product = require('../models/product'); // get the model and in there, the post schema
 
 
 const pantryController = require('../controllers/pantry');

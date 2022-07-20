@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 require('dotenv').config(); // import config values
@@ -34,7 +35,7 @@ app.use('/pantry', pantryRoutes);
 app.use('/user', userRoutes); // use authentication routes
 
 // establish a connection to the mongo database
-mongoose.connect('mongodb://localhost:27017/cms',
+mongoose.connect('mongodb://localhost:27017/foodstorage',
    { useNewUrlParser: true }, (err, res) => { 
       if (err) {
          console.log('Connection failed: ' + err);
