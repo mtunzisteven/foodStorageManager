@@ -17,6 +17,8 @@ module.exports = (req, res, next) => {
     if(!authHeader){
         const error = new Error('Not Authenticated[No authHeader]: Error!');
         error.statusCode = 401;
+
+        throw error;
     }
 
     const token = authHeader.split(' ')[1]; // split into array at the space and use 2nd element

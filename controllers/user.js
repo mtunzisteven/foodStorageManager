@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config(); // import config values
 
 const User = require('../models/user');
+const sequenceGenerator = require('./sequenceGenerator');
 
 
 exports.postLogin = (req, res, next) => {
@@ -46,7 +47,7 @@ exports.postLogin = (req, res, next) => {
             // This response(res.status(201).json()) includes status code to assist request understand outcome since they must decide what view to dispay
             res.status(200).json({
                 token:token, // frontend must receive & store this as long as the user is logged in
-                userId: user._id.toString()
+                user: user
             });        })
         .catch(err =>{
 
@@ -77,7 +78,7 @@ exports.patchUpdate = (req, res, next) => {
     const familySize = req.body.familySize;
     const id = req.body.id;
 
-    User.updateOne({_id: id},{$set:
+    User.updateOne({id: id},{$set:
         {
             name: name,
             email: email,
@@ -107,10 +108,14 @@ exports.postSignup = (req, res, next) => {
         });
     }
 
+    // get the next id for the new user being added
+    const maxUserId = sequenceGenerator.nextId("users");
+
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
     const familySize = req.body.familySize;
+    const id = maxUserId;
 
     bcrypt.hash(password, 12) // hash password with salt of 12 characters included
     .then(hashedPassword=>{
@@ -119,16 +124,15 @@ exports.postSignup = (req, res, next) => {
             name: name,
             email: email,
             password: hashedPassword, // password to supply to user is hashed
-            familySize: familySize
-            
+            familySize: familySize,
+            id: id
         })
     
         return user.save();
     })
     .then(result=>{
         res.status(201).json({
-                message:'User Created successfully!', 
-                userId:result._id
+                message:'User Created successfully!'
             })
     })
     .catch(err=>{

@@ -1,25 +1,11 @@
 const { validationResult } = require('express-validator');
-const Product = require('../models/product'); // get the model and in there, the post schema
-const User = require('../models/user'); // get the model and in there, the post schema
-const path = require('path');
 
+const Product = require('../models/product'); // get the model and in there, the post schema
+const sequenceGenerator = require('./sequenceGenerator');
 
 exports.getProducts = (req, res, next) => {
 
-    let currentPage = req.query.page || 1; // current page or initial page
-    const perPage = 20;
-    let totalItems;
-
     Product.find({creator:req.userId}) // get products by the specific user, not ones created by another user(for total products count)
-        .countDocuments() // get the total number of posts in the db(products docuements)
-        .then(count=>{
-
-            totalItems =count;
-
-            return Post.find({creator:req.userId}) // for display
-                .skip((currentPage - 1) * perPage)
-                .limit(perPage) // per page set
-        })
         .then(products=>{
 
             // end the sherade if there is no posts found
@@ -29,8 +15,7 @@ exports.getProducts = (req, res, next) => {
 
             res.status(200).json({
                 message: 'Fetched posts successfully', 
-                products:products,
-                totalItems: totalItems
+                products:products
             });
 
         })
@@ -48,7 +33,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
 
-    const productId = req.params.productId;
+    const productId = req.body.id;
 
     Post.findById(productId)
     .then(product =>{
@@ -95,12 +80,17 @@ exports.createProduct = (req, res, next) => {
         throw error;
     }
 
+    // get the next id for the new user being added
+    const maxProductId = sequenceGenerator.nextId("products");
+
     const name = req.body.name;
     const servings = req.body.servings;
     const addedDate = Date.now();
     const expiryDate = req.body.expiryDate;
+    const id = maxProductId;
 
     const product = new Product({
+        id: productId,
         name:name, 
         servings:servings,        
         addedDate:addedDate,
@@ -109,14 +99,6 @@ exports.createProduct = (req, res, next) => {
     });
 
     Product.save() // store product in db
-        .then(result=> {
-            return User.findById(req.userId); // get back the user logged using authentication defined userId
-        })
-        .then(user =>{
-
-            user.pantry.push(product); // add the product to the user in the db
-            return user.save(); // save the user with the new product added
-        })
         .then(result => {
 
             // This response(res.json()) returns a json format response to the request
@@ -140,7 +122,7 @@ exports.createProduct = (req, res, next) => {
 
 exports.updateProduct = (req, res, next) => {
 
-    const productId = req.params.productId;
+    const productId = req.body.id;
     const name = req.body.name;
     const servings = req.body.servings;
     const expiryDate = req.body.expiryDate;
@@ -188,8 +170,7 @@ exports.updateProduct = (req, res, next) => {
     .then(result=>{
         res.status(200)
             .json({
-                massage:"Product updated successfully", 
-                product:result // this is the product
+                massage:"Product updated successfully"
             });
     })
     .catch(err =>{
@@ -206,7 +187,7 @@ exports.updateProduct = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
 
-    const productId = req.params.productId;
+    const productId = req.body.id;
 
     Product.findById(productId)
     .then(product=>{
@@ -231,14 +212,6 @@ exports.deleteProduct = (req, res, next) => {
 
         // delete post
         return Product.findByIdAndRemove(productId);
-    })
-    .then(result => {
-        return User.findById(req.userId); // find the specific user from db
-    })
-    .then(user =>{
-
-        user.pantry.pull(productId); // remove the product with the matching id
-        return user.save();
     })
     .then(result=>{
         res.status(200).json({massage:"Product deleted successfully"});

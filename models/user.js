@@ -3,6 +3,10 @@ const Schema = mongoose.Schema; // store schema
 
 const userSchema = new Schema({
 
+    id: {
+        type: String,
+        required: true
+    },    
     email: {
         type: String,
         required: true
@@ -18,14 +22,6 @@ const userSchema = new Schema({
     admin: {
       type: Boolean,
       default: false
-    },
-    pantry: { // When the store portion is intergrated, this code will be useful.
-        items: [
-            {
-                product: {type: Schema.Types.ObjectId, ref: 'Product', required: true}, // call schema to describe id type of mongoDb in User model | relation : not used when docs embedded
-                quantity: {type: Number, required: true}
-            }
-        ]
     }
 });
 
