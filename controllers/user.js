@@ -7,6 +7,8 @@ require('dotenv').config(); // import config values
 const User = require('../models/user');
 const sequenceGenerator = require('./sequenceGenerator');
 
+const SECRET = process.env.SECRET;
+
 
 exports.postLogin = (req, res, next) => {
 
@@ -17,6 +19,8 @@ exports.postLogin = (req, res, next) => {
             message:errors.array()[0].msg
         });
     }
+
+    console.log(req.body.email);
 
     const email = req.body.email;
 
@@ -41,13 +45,13 @@ exports.postLogin = (req, res, next) => {
                 }, 
                 SECRET, // 'secret | developer generated string to sign token'
                 {expiresIn:'1h'}
-            );
+            ); 
 
             // This response(res.json()) returns a json format response to the request
             // This response(res.status(201).json()) includes status code to assist request understand outcome since they must decide what view to dispay
             res.status(200).json({
                 token:token, // frontend must receive & store this as long as the user is logged in
-                user: user
+                id: user.id
             });        })
         .catch(err =>{
 
@@ -61,31 +65,61 @@ exports.postLogin = (req, res, next) => {
         });
 };
 
-exports.patchUpdate = (req, res, next) => {
+exports.getUser = (req, res, next) => {
 
     let errors = validationResult(req); // get all erros stored by check in this request
 
     if(!errors.isEmpty()){
-        return res(500).json({
+        return res.status(422).json({
             message:errors.array()[0].msg
         });
     }
 
-    
-    const name = req.body.name;
-    const email = req.body.email;
-    const password = req.body.password;
-    const familySize = req.body.familySize;
-    const id = req.body.id;
+    User.findOne({id: req.params.id})
+        .then(user=> {
 
-    User.updateOne({id: id},{$set:
-        {
-            name: name,
-            email: email,
-            password: password,
-            familySize: familySize
-        }
-    })
+            if(!user){ // give error a status code if it is not found 
+
+                const error = new Error('User was not found')
+
+                error.statusCode = 401;
+
+                throw error;
+
+            } // cannot throw error inside a promise, therefore we send catch block
+
+            // This response(res.json()) returns a json format response to the request
+            // This response(res.status(201).json()) includes status code to assist request understand outcome since they must decide what view to dispay
+            res.status(201).json({user: user});
+
+        })
+        .catch(err =>{
+
+            if(!err.statusCode){ // give error a status code if it is not found 
+
+                err.statusCode = 500;
+
+            } // cannot throw error inside a promise, therefore we send it to next middleware
+
+            next(err); // go to next middleware with err as an argument passed to it.
+        });
+};
+
+exports.putUpdate = (req, res, next) => {
+
+    let errors = validationResult(req); // get all erros stored by check in this request
+
+    if(!errors.isEmpty()){
+        return res.status(500).json({
+            message:errors.array()[0].msg
+        });
+    }
+
+    const familySize = req.body.familySize;
+    
+    const id = req.params.id;
+
+    User.updateOne({id: id},{$set:{familySize: familySize}})
     .then(result =>{
         res.status(201).json({
             massage: 'User updated successfully!'

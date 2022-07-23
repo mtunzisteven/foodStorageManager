@@ -35,15 +35,15 @@ router.post(
     pantryController.createProduct
 );
 
-//GET /pantry/:productId
-router.get(
+//DELETE /pantry/:productId
+router.delete(
     '/:productId',  
     isAuth,
-    pantryController.getProduct
+    pantryController.deleteProduct
     );
 
-//PATCH /pantry:productId
-router.patch(
+//PUT /pantry:productId
+router.put(
     '/:productId',   
     isAuth,  
     [ // validation middleware uses {check} above

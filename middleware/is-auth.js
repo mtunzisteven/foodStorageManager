@@ -23,6 +23,12 @@ module.exports = (req, res, next) => {
 
     const token = authHeader.split(' ')[1]; // split into array at the space and use 2nd element
 
+    if(!token){
+        return res.status(200).json({
+            message:'Please Log in'
+        })
+    }
+
     let decodedToken;
 
     try{
@@ -38,6 +44,8 @@ module.exports = (req, res, next) => {
         error.statusCode = 401;
         throw error;
     }
+
+    console.log(decodedToken);
 
     req.userId = decodedToken.userId;
     next();

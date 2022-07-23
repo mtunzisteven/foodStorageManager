@@ -33,7 +33,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
 
-    const productId = req.body.id;
+    const productId = req.params.id;
 
     Post.findById(productId)
     .then(product =>{
@@ -87,10 +87,9 @@ exports.createProduct = (req, res, next) => {
     const servings = req.body.servings;
     const addedDate = Date.now();
     const expiryDate = req.body.expiryDate;
-    const id = maxProductId;
 
     const product = new Product({
-        id: productId,
+        id: maxProductId,
         name:name, 
         servings:servings,        
         addedDate:addedDate,
@@ -122,11 +121,6 @@ exports.createProduct = (req, res, next) => {
 
 exports.updateProduct = (req, res, next) => {
 
-    const productId = req.body.id;
-    const name = req.body.name;
-    const servings = req.body.servings;
-    const expiryDate = req.body.expiryDate;
-
     const errors = validationResult(req); // fetch all errors caught by express-validator in router
 
     if(!errors.isEmpty()){ // errors is not empty
@@ -137,6 +131,11 @@ exports.updateProduct = (req, res, next) => {
 
         throw error;
     }
+    
+    const productId = req.params.id;
+    const name = req.body.name;
+    const servings = req.body.servings;
+    const expiryDate = req.body.expiryDate;
 
     Product.findById(productId)
     .then(product =>{
@@ -187,7 +186,7 @@ exports.updateProduct = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
 
-    const productId = req.body.id;
+    const productId = req.params.id;
 
     Product.findById(productId)
     .then(product=>{

@@ -7,7 +7,7 @@ const sequenceSchema = mongoose.Schema({
         required: true 
     },
     maxProductId: { 
-        type: Number, 
+        type: Number,  
         required: true 
     }
 }); // Schema is a blueprint : a definition
