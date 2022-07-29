@@ -31,11 +31,11 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use('/products', pantryRoutes);
+app.use('/products', pantryRoutes); 
 app.use('/user', userRoutes); // use authentication routes 
 
 // establish a connection to the mongo database
-mongoose.connect('mongodb://localhost:27017/foodstorage',
+mongoose.connect(DB_URL,
    { useNewUrlParser: true }, (err, res) => { 
       if (err) {
          console.log('Connection failed: ' + err);
