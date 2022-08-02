@@ -24,11 +24,9 @@ router.post(
             .trim()
             .isLength({min:2}),
         body('servings')
-            .trim()
             .isLength({min:1})
             .isNumeric(),
         body('expiryDate')
-            .trim()
             .isLength({min:1})
             .isNumeric()
     ],

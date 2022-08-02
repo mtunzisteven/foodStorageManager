@@ -11,9 +11,13 @@ const productSchema = new Schema({
     name: {
       type: String,
       required: true
+    },    
+    amount: {
+      type: String,
+      required: true
     },
     servings: {
-      type: String,
+      type: Number,
       required: true
     },
     addedDate: {

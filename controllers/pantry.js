@@ -8,13 +8,15 @@ exports.getProducts = (req, res, next) => {
     Product.find({creator:req.userId}) // get products by the specific user, not ones created by another user(for total products count)
         .then(products=>{
 
+            console.log(products); 
+
             // end the sherade if there is no posts found
             if(!products){
                 return;
             }
 
             res.status(200).json({
-                message: 'Fetched posts successfully', 
+                message: 'Fetched products successfully', 
                 products:products
             });
 
@@ -39,7 +41,7 @@ exports.getProduct = (req, res, next) => {
     .then(product =>{
         
         if(!product){
-            const error = new Error('Could not find post!');
+            const error = new Error('Could not find product!');
 
             error.statusCode = 404;
 
@@ -75,7 +77,7 @@ exports.createProduct = (req, res, next) => {
 
         const error = new Error("Validation Failed: Entered product data is incorrect!");
 
-        error.statusCode = 422;
+        error.statusCode = 422; 
 
         throw error;
     }
@@ -84,6 +86,7 @@ exports.createProduct = (req, res, next) => {
     const maxProductId = sequenceGenerator.nextId("products");
 
     const name = req.body.name;
+    const amount = req.body.amount;
     const servings = req.body.servings;
     const addedDate = Date.now();
     const expiryDate = req.body.expiryDate;
@@ -91,13 +94,14 @@ exports.createProduct = (req, res, next) => {
     const product = new Product({
         id: maxProductId,
         name:name, 
+        amount:amount, 
         servings:servings,        
         addedDate:addedDate,
         expiryDate:expiryDate,
         creator: req.userId // req.userId defined at authentication of user
     });
 
-    Product.save() // store product in db
+    product.save() // store product in db
         .then(result => {
 
             // This response(res.json()) returns a json format response to the request
@@ -133,6 +137,7 @@ exports.updateProduct = (req, res, next) => {
     }
     
     const productId = req.params.id;
+    const amount = req.body.amount;
     const name = req.body.name;
     const servings = req.body.servings;
     const expiryDate = req.body.expiryDate;
@@ -160,6 +165,7 @@ exports.updateProduct = (req, res, next) => {
 
         // update product details
         product.name = name;
+        product.amount = amount;
         product.servings = servings;
         product.expiryDate = expiryDate;
 
