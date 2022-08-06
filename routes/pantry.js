@@ -33,13 +33,6 @@ router.post(
     pantryController.createProduct
 );
 
-//DELETE /pantry/:productId
-router.delete(
-    '/:productId',  
-    isAuth,
-    pantryController.deleteProduct
-    );
-
 //PUT /pantry:productId
 router.put(
     '/:productId',   

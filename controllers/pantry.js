@@ -192,9 +192,9 @@ exports.updateProduct = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
 
-    const productId = req.params.id;
+    const productId = req.params.productId;
 
-    Product.findById(productId)
+    Product.find({id: productId})
     .then(product=>{
 
         if(!product){
@@ -204,10 +204,9 @@ exports.deleteProduct = (req, res, next) => {
 
             throw error; // will send us to catch block
         }
-
         
         // check if the user trying to update the product is the logged in user
-        if(product.creator.toString() !== req.userId){
+        if(product[0].creator.toString() !== req.userId){
             const error = new Error('Cannot delete product created by another user');
 
             error.statusCode = 403;
@@ -216,10 +215,10 @@ exports.deleteProduct = (req, res, next) => {
         }
 
         // delete post
-        return Product.findByIdAndRemove(productId);
+        return Product.deleteOne({id: productId});
     })
     .then(result=>{
-        res.status(200).json({massage:"Product deleted successfully"});
+        res.status(200).json({massage:"Product deleted successfully"}); 
     })
     .catch(err =>{
 
