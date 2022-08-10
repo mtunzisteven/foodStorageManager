@@ -51,7 +51,8 @@ exports.postLogin = (req, res, next) => {
             // This response(res.status(201).json()) includes status code to assist request understand outcome since they must decide what view to dispay
             res.status(200).json({
                 token:token, // frontend must receive & store this as long as the user is logged in
-                id: user.id
+                user: user,
+                status: true
             });        })
         .catch(err =>{
 
@@ -122,7 +123,8 @@ exports.putUpdate = (req, res, next) => {
     User.updateOne({id: id},{$set:{familySize: familySize}})
     .then(result =>{
         res.status(201).json({
-            massage: 'User updated successfully!'
+            massage: 'User updated successfully!',
+            status: true
         })
     })
     .catch(err => {
@@ -166,7 +168,8 @@ exports.postSignup = (req, res, next) => {
     })
     .then(result=>{
         res.status(201).json({
-                message:'User Created successfully!'
+                message:'User Created successfully!',
+                status: true
             })
     })
     .catch(err=>{

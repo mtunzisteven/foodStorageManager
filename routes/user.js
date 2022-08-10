@@ -11,6 +11,8 @@ const User = require('../models/user');
 
 const router = express.Router();
 
+const nameChars = 2;
+
 // /login => POST
 router.post(
     '/login', 
@@ -18,7 +20,7 @@ router.post(
     [
         body( // chaning a second validator for req.body object
             'password', // req.body.password value being validated here
-            'Please make sure password is at least 8 characters long and includes letters and numbers' // error message displayed
+            'Invalid email or password.' // error message displayed
             )
             .isLength({min: 8})
             .isAlphanumeric()
@@ -33,7 +35,7 @@ router.post(
                 .then(user => {
                     if(!user){
 
-                        return Promise.reject("Invalid email. Email not foumd.");
+                        return Promise.reject("Invalid email or password."); // don't specify email or password as it hints to hacker
 
                     }else{
 
@@ -47,7 +49,7 @@ router.post(
 
                                     }else{
 
-                                        return Promise.reject("Invalid password!");
+                                        return Promise.reject("Invalid email or password!");
 
                                     }
                                 });
@@ -65,9 +67,9 @@ router.post(
     '/signup', 
     [    
         body('name', // req.body.familySize value being validated here
-            'Please make sure You added your name' // error message displayed
+            `Name input has less than ${nameChars} characters` // error message displayed
             )
-            .isLength({min: 2}) // Name must have at least 2 chars
+            .isLength({min: nameChars}) // Name must have at least 2 chars
             .isString() // must be a string
             .trim(), // remove whitespace
         check('email')

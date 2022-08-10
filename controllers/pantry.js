@@ -8,8 +8,6 @@ exports.getProducts = (req, res, next) => {
     Product.find({creator:req.userId}) // get products by the specific user, not ones created by another user(for total products count)
         .then(products=>{
 
-            console.log(products); 
-
             // end the sherade if there is no posts found
             if(!products){
                 return;
@@ -136,26 +134,29 @@ exports.updateProduct = (req, res, next) => {
         throw error;
     }
     
-    const productId = req.params.id;
+    const productId = req.params.productId;
     const amount = req.body.amount;
     const name = req.body.name;
     const servings = req.body.servings;
-    const expiryDate = req.body.expiryDate;
+    const expiryDate = req.body.expiryDate; 
 
-    Product.findById(productId)
+    Product.find({id:productId})
     .then(product =>{
 
         // Check if product was found
         if(!product){
-            const error = new Error('Could not find post!');
+            const error = new Error('Could not find Product!');
 
             error.statusCode = 404;
 
             throw error; // will send us to catch block
-        }
+        }       
+
+
+
 
         // check if the user trying to update the product is the logged in user
-        if(post.creator.toString() !== req.userId){
+        if(product[0].creator.toString() !== req.userId){
             const error = new Error('Cannot edit product created by another user');
 
             error.statusCode = 403;
@@ -163,13 +164,17 @@ exports.updateProduct = (req, res, next) => {
             throw error; // will send us to catch block
         }
 
-        // update product details
-        product.name = name;
-        product.amount = amount;
-        product.servings = servings;
-        product.expiryDate = expiryDate;
 
-        return product.save(); // save to db
+        return Product.updateOne( // for some reason, product.save() was doesn't work
+            {id: productId},
+            {$set:
+                {
+                    name: name,
+                    amount: amount,
+                    servings: servings,
+                    expiryDate: expiryDate
+                }
+            });
 
     })
     .then(result=>{

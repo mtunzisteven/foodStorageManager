@@ -15,7 +15,7 @@ router.get(
     pantryController.getProducts
 );
 
-//POST /pantry
+//POST /products
 router.post(
     '/', 
     isAuth,
@@ -33,28 +33,26 @@ router.post(
     pantryController.createProduct
 );
 
-//PUT /pantry:productId
+//PUT /products/:productId
 router.put(
     '/:productId',   
     isAuth,  
     [ // validation middleware uses {check} above
-        body('name')
-            .trim()
-            .isLength({min:2}),
-        body('servings')
-            .trim()
-            .isLength({min:1})
-            .isNumeric(),
-        body('expiryDate')
-            .trim()
-            .isLength({min:1})
-            .isNumeric()
+    body('name')
+        .trim()
+        .isLength({min:2}),
+    body('servings')
+        .isLength({min:1})
+        .isNumeric(),
+    body('expiryDate')
+        .isLength({min:1})
+        .isNumeric()
     ],
     pantryController.updateProduct
 );
 
 
-//DELETE /pantry/:productId
+//DELETE /products/:productId
 router.delete(
     '/:productId', 
     isAuth,
