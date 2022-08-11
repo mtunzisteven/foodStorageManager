@@ -41,7 +41,7 @@ exports.postLogin = (req, res, next) => {
             const token = jwt.sign(
                 {
                     email: user.email,
-                    userId: user._id.toString() 
+                    userId: user._id.toString()
                 }, 
                 SECRET, // 'secret | developer generated string to sign token'
                 {expiresIn:'1h'}
@@ -52,7 +52,7 @@ exports.postLogin = (req, res, next) => {
             res.status(200).json({
                 token:token, // frontend must receive & store this as long as the user is logged in
                 user: user,
-                status: true
+                _tokenExpirationDate: new Date(new Date().getTime() + 1*60*60*1000)
             });        })
         .catch(err =>{
 
