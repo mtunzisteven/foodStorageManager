@@ -31,7 +31,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.8.1",
     "mongoose": "^6.5.0",
-    "nodemon": "^2.0.19"
-  },
-  "devDependencies": {}
+    "nodemon": "^2.0.19",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0"
+  }
 }

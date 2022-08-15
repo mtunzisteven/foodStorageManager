@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const swaggerJsdoc = require('swagger-jsdoc'); // Swagger docs
+const swaggerUI = require('swagger-ui-express'); // Swagger UI 
 const bodyParser = require('body-parser');
 require('dotenv').config(); // import config values
 
@@ -10,7 +11,48 @@ const DB_URL = process.env.MONGODB_URL;
 const pantryRoutes = require('./routes/pantry');
 const userRoutes = require('./routes/user'); // authentication routes
 
+// Swagger const options
+const options = {
+   definition: {
+       openapi: '3.0.0.',
+       info: {
+           title: 'The food storage API',
+           version: '1.0.0',
+           description: 'A food storage API built with Node.JS and MongoDB'
+       },
+       servers: [
+           {
+               url: 'http://localhost:3000/' // The web url for the api
+           }
+       ],
+       components: { // this token is added to specify securitySchema
+         securitySchemes: { // type http as opposed to type apiKey doesn't require adding "Bear " infront of token
+           bearerAuth: {
+               type: "http",
+               scheme: "bearer",
+           },
+         },
+       },
+       security: [ // this part goes with the preceding components obj
+         {
+           bearerAuth: [],
+         },
+       ],
+   },
+   apis: ['./routes/*.js'] // api routes shown in Swagger UI are all js files inside routes folder
+ }
+ 
+ 
+// Swagger docs creation
+const swaggerSpec = swaggerJsdoc(options);
+
+
+// define express app | express used to manage middlewares
 const app = express();
+
+// Swagger UI setup | the url route specified is where UI will be displayed
+app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSpec));
+ 
 app.use(bodyParser.json()); // application/json
 
 // more elegant way to handle all errors
