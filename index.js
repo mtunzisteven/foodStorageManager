@@ -5,9 +5,14 @@ const swaggerUI = require('swagger-ui-express'); // Swagger UI
 const bodyParser = require('body-parser');
 require('dotenv').config(); // import config values
 
-const PORT = process.env.PORT;
-const DB_URL = process.env.MONGODB_URL;
-const URL = process.env.URL;
+// MongoDB URL
+const DB_URL = process.env.MONGODB_URL; 
+
+// used in Swagger API
+const APP_URL = process.env.URL || 'http://localhost:3000';
+
+// server port           
+const PORT = process.env.PORT || 3000;
 
 const pantryRoutes = require('./routes/pantry');
 const userRoutes = require('./routes/user'); // authentication routes
@@ -23,7 +28,7 @@ const options = {
        },
        servers: [
            {
-               url: 'http://localhost:3000/' // The web url for the api
+               url: APP_URL // The web url for the api
            }
        ],
        components: { // this token is added to specify securitySchema
