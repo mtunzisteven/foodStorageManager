@@ -57,7 +57,7 @@ const swaggerSpec = swaggerJsdoc(options);
 const app = express();
 
 // Swagger UI setup | the url route specified is where UI will be displayed
-app.use('/',swaggerUI.serve,swaggerUI.setup(swaggerSpec));
+app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSpec));
  
 app.use(bodyParser.json()); // application/json
 
