@@ -31,15 +31,19 @@ const router = express.Router();
 *             : Get products
 *      description: Fetch all the food in user's storage.
 *      responses:
-*        '200':
-*          description: OK
-*          content:
-*            text/plain:
-*              schema:
-*                type: string
-*
+*          '200': 
+*              description: 
+*                  Fetched products successfully
+*          '401': 
+*              description: 
+*                  Not Authenticated!
+*          '4XX': 
+*              description: 
+*                  Error fetching products!
+*          '5XX': 
+*              description: 
+*                  Server Error!
 */
-
 
 //GET /products
 router.get(
@@ -64,22 +68,22 @@ router.get(
 *              properties:
 *                  name:
 *                      type: string
-*                      description: The email that the user will use to log in
+*                      description: The name of the product 
 *                  amount:
 *                      type: string
-*                      description: The secret password that the user will use to log in
+*                      description: The volume of the product
 *                  servings:
 *                      type: number
-*                      description: The email that the user will use to log in
+*                      description: The number of servings the product has
 *                  addedDate:
 *                      type: number
-*                      description: The secret password that the user will use to log in
+*                      description: The date when the product was created
 *                  expiryDate:
 *                      type: number
-*                      description: The email that the user will use to log in
+*                      description: The date when the product will expire
 *                  creator:
 *                      type: string
-*                      description: The secret password that the user will use to log in
+*                      description: The id of the user who created the product
 */
 
 /**
@@ -97,13 +101,18 @@ router.get(
 *                  schema:
 *                      $ref: '#components/schemas/addProduct'
 *      responses:
-*        '200':
-*          description: OK
-*          content:
-*            text/plain:
-*              schema:
-*                type: string
-*
+*          '201': 
+*              description: 
+*                  Product created successfully!
+*          '401': 
+*              description: 
+*                  Not Authenticated!
+*          '422': 
+*              description: 
+*                  Validation Failed. Entered product data is incorrect!
+*          '5XX': 
+*              description: 
+*                  Server Error!
 */
 
 //POST /products
@@ -124,6 +133,50 @@ router.post(
     pantryController.createProduct
 );
 
+
+/**
+* @swagger
+* /products/{productId}:
+*  put:
+*      parameters:
+*         - in: path
+*           name: id
+*           required: true
+*           schema:
+*             type: integer
+*           style: simple
+*           explode: true
+*      summary: Update a existing product
+*      tags:
+*           : Update an existing product
+*      description: New storage product added to the users pantry(Food storage).
+*      requestBody:
+*          required: true
+*          content:
+*              application/json:
+*                  schema:
+*                      $ref: '#components/schemas/addProduct'
+*      responses:
+*          '200': 
+*              description: 
+*                  Product created successfully!
+*          '422': 
+*              description: 
+*                  Validation Failed. Entered product data is incorrect!
+*          '401': 
+*              description: 
+*                  Not Authenticated!
+*          '403': 
+*              description: 
+*                  Cannot edit product created by another user
+*          '404': 
+*              description: 
+*                  Could not find Product!
+*          '5XX': 
+*              description: 
+*                  Server Error!
+*/
+
 //PUT /products/:productId
 router.put(
     '/:productId',   
@@ -142,6 +195,42 @@ router.put(
     pantryController.updateProduct
 );
 
+/**
+* @swagger
+* /products/{productId}:
+*  delete:
+*      parameters:
+*         - in: path
+*           name: id
+*           required: true
+*           schema:
+*             type: integer
+*           style: simple
+*           explode: true
+*      summary: Delete a product from the products list
+*      tags:
+*           : Delete a product
+*      description: New storage product added to the users pantry(Food storage).
+*      responses:
+*          '200': 
+*              description: 
+*                  Product deleted successfully!
+*          '422': 
+*              description: 
+*                  Validation Failed. Entered product data is incorrect!
+*          '401': 
+*              description: 
+*                  Not Authenticated!
+*          '403': 
+*              description: 
+*                  Cannot delete product created by another user
+*          '404': 
+*              description: 
+*                  Could not find Product!
+*          '5XX': 
+*              description: 
+*                  Server Error!
+*/
 
 //DELETE /products/:productId
 router.delete(

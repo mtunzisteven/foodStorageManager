@@ -105,7 +105,7 @@ exports.createProduct = (req, res, next) => {
             // This response(res.json()) returns a json format response to the request
             // this product would be stored in the db
             res.status(201).json({
-                message:'Product created subbessfully!',
+                message:'Product created successfully!',
                 product: product
             });
         })
