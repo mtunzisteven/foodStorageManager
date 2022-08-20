@@ -80,7 +80,7 @@ router.post(
             .isString() // must be a string
             .trim(), // remove whitespace
         check('email')
-            .isEmail()
+            .isEmail() 
             .withMessage('Please enter a valid email')
             .custom((emailEntered, {req}) => { // my custom validation check and error message
 
