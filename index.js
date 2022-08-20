@@ -30,20 +30,7 @@ const options = {
            {
                url: APP_URL // The web url for the api
            }
-       ],
-       components: { // this token is added to specify securitySchema
-         securitySchemes: { // type http as opposed to type apiKey doesn't require adding "Bear " infront of token
-           bearerAuth: {
-               type: "http",
-               scheme: "bearer",
-           },
-         },
-       },
-       security: [ // this part goes with the preceding components obj
-         {
-           bearerAuth: [],
-         },
-       ],
+       ]
    },
    apis: ['./routes/*.js'] // api routes shown in Swagger UI are all js files inside routes folder
  }

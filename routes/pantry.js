@@ -30,6 +30,13 @@ const router = express.Router();
 *      tags:
 *             : Get products
 *      description: Fetch all the food in user's storage.
+*      components: 
+*           securitySchemes: 
+*              bearerAuth: 
+*                  type: "http"
+*                  scheme: "bearer"
+*      security: 
+*           bearerAuth: []
 *      responses:
 *          '200': 
 *              description: 
