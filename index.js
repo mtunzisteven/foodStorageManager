@@ -9,7 +9,7 @@ require('dotenv').config(); // import config values
 const DB_URL = process.env.MONGODB_URL; 
 
 // used in Swagger API
-const APP_URL = 'https://food-storage-project.herokuapp.com' || 'http://localhost:3000';
+const APP_URL = 'https://food-storage-project.herokuapp.com';
 
 // server port           
 const PORT = process.env.PORT || 3000;
