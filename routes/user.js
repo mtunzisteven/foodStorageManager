@@ -60,12 +60,18 @@ const nameChars = 2;
 *                  schema:
 *                      $ref: '#components/schemas/UserSignup'
 *      responses:
-*        '200':
-*          description: OK
-*          content:
-*            text/plain:
-*              schema:
-*                type: string
+*          '201': 
+*              description: 
+*                  User Created successfully!
+*          '401': 
+*              description: 
+*                  Not Authenticated!
+*          '422': 
+*              description: 
+*                  Data Validation Error!
+*          '5XX': 
+*              description: 
+*                  Server Error!
 *
 */
 
@@ -145,13 +151,18 @@ router.post(
 *                  schema:
 *                      $ref: '#components/schemas/UserLogin'
 *      responses:
-*        '200':
-*          description: OK
-*          content:
-*            text/plain:
-*              schema:
-*                type: string
-*
+*          '200': 
+*              description: 
+*                  User signed in successfully!
+*          '401': 
+*              description: 
+*                  User with this email was not found
+*          '422': 
+*              description: 
+*                  Data Validation Error!
+*          '5XX': 
+*              description: 
+*                  Server Error!
 */
 
 // /login => POST
