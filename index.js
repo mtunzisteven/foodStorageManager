@@ -9,7 +9,7 @@ require('dotenv').config(); // import config values
 const DB_URL = process.env.MONGODB_URL; 
 
 // used in Swagger API
-const APP_URL = 'https://food-storage-project.herokuapp.com';
+const APP_URL = process.env.APP_URL || 'http://localhost:3000';
 
 // server port           
 const PORT = process.env.PORT || 3000;
@@ -36,9 +36,15 @@ const options = {
            bearerAuth: {
                type: "http",
                scheme: "bearer",
+               bearerFormat: "JWT"
            },
          },
-       }
+       },
+       security: [ // this part goes with the preceding components obj
+         {
+           bearerAuth: [],
+         },
+       ],
    },
    apis: ['./routes/*.js'] // api routes shown in Swagger UI are all js files inside routes folder
  }

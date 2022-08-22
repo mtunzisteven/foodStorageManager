@@ -53,6 +53,8 @@ const nameChars = 2;
 *      tags:
 *           : User signup 
 *      description: New users can signup for an account in order to add and update their Food
+*      security: 
+*          -bearerAuth: []
 *      requestBody:
 *          required: true
 *          content:
@@ -144,6 +146,8 @@ router.post(
 *      tags:
 *           : User login  
 *      description: New users can signup for an account in order to add and update their Food
+*      security: 
+*          -bearerAuth: []
 *      requestBody:
 *          required: true
 *          content:
